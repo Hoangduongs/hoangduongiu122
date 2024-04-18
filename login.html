@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="password"] {
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-container input[type="submit"] {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-container input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .switch-form {
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container" id="loginForm">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="submit" value="Login">
+    </form>
+    <div class="switch-form">
+      Don't have an account? <a href="#" onclick="switchForm('register')">Register</a>
+    </div>
+  </div>
+
+  <div class="form-container" id="registerForm" style="display: none;">
+    <h2>Register</h2>
+    <form id="registerForm">
+      <input type="text" name="username" placeholder="Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+      <input type="submit" value="Register">
+    </form>
+    <div class="switch-form">
+      Already have an account? <a href="#" onclick="switchForm('login')">Login</a>
+    </div>
+  </div>
+
+  <script>
+    var accounts = []
+
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent form submission
+      // Here, you can perform login validation and authentication
+      // For demonstration purposes, let's assume the login is successful
+      // Redirect to another page after login
+      let username = document.querySelector("#loginForm input[name='username']").value
+      let password = document.querySelector("#loginForm input[name='password']").value
+
+      if(username == "" || password == ""){
+        alert("Yeu cau nhap thong tin")
+      }
+
+      accounts = JSON.parse(localStorage.getItem("accounts") || "[]")
+      let userExisted = false
+      for(let i=0; i<accounts.length; i++){
+        if (accounts[i].username == username && accounts[i].password == password){
+          userExisted = true
+        }
+      }
+      if(userExisted){
+        localStorage.setItem("currentAccount", JSON.stringify({username,password}))
+
+        window.location.href = 'index.html';
+      }else{
+        alert("Tai khoan chua ton tai")
+      }
+      
+    });
+
+
+    document.getElementById('registerForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent form submission
+      let username = document.querySelector("#registerForm input[name='username']")
+      let firstPass = document.querySelector("#registerForm input[name='password']")
+      let confirmPass = document.querySelector("#registerForm input[name='confirm_password']")
+
+      console.log("value 1, value 2", firstPass.value, confirmPass.value)
+
+      if (firstPass.value !== confirmPass.value){
+        alert("2 password khac nhau !")
+      }
+
+      accounts = JSON.parse(localStorage.getItem("accounts") || "[]")
+
+      accounts.push({
+        username: username.value,
+        password: firstPass.value
+      })
+
+      localStorage.setItem("accounts", JSON.stringify(accounts))
+      window.location.reload();
+       //Here, you can perform login validation and authentication
+       //For demonstration purposes, let's assume the login is successful
+       //Redirect to another page after login
+       //window.location.href = 'index.html';
+    });
+
+
+    function switchForm(formType) {
+      if (formType === 'login') {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+      } else if (formType === 'register') {
+        console.log(1111111111)
+
+
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+      }
+    }
+  </script>
+
+</body>
+
+</html>
